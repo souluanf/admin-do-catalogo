@@ -4,13 +4,25 @@ import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CategoryTest {
 
     @Test
-    void testNewCategory() {
-        Category category = new Category();
-        assertNotNull(category);
+    void givenAValidParams_whenCallNewCategory_thenInstantiateACategory() {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedSIsActive = true;
+        final var actualCategory = Category.newCategory(expectedName, expectedDescription, expectedSIsActive);
+
+        assertNotNull(actualCategory);
+        assertNotNull(actualCategory.getId());
+        assertEquals(expectedName, actualCategory.getName());
+        assertEquals(expectedDescription, actualCategory.getDescription());
+        assertEquals(expectedSIsActive, actualCategory.isActive());
+        assertNotNull(actualCategory.getCreatedAt());
+        assertNotNull(actualCategory.getUpdatedAt());
+        assertNull(actualCategory.getDeletedAt());
     }
 
 }
