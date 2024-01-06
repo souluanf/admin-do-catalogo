@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public class CategoryID extends Identifier {
     private final String value;
+
     private CategoryID(final String value) {
         Objects.requireNonNull(value, "CategoryId must not be null");
         this.value = value;

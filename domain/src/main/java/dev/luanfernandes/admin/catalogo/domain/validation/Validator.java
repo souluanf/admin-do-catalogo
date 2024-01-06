@@ -6,6 +6,7 @@ public abstract class Validator {
     protected Validator(final ValidationHandler aHandler) {
         this.handler = aHandler;
     }
+
     public abstract void validate();
 
     protected ValidationHandler validationHandler() {
