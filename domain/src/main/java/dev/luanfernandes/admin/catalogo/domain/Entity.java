@@ -1,13 +1,17 @@
 package dev.luanfernandes.admin.catalogo.domain;
 
+import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 public abstract class Entity<ID extends Identifier> {
     protected final ID id;
     protected Entity(final ID id) {
-        Objects.requireNonNull(id, "id cannot be null");
+        Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+
+    public abstract void validate(ValidationHandler handler);
 
     public ID getId() {
         return id;
