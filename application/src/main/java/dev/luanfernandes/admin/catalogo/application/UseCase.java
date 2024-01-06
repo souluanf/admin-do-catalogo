@@ -1,6 +1,5 @@
 package dev.luanfernandes.admin.catalogo.application;
 
-
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 
 public class UseCase {

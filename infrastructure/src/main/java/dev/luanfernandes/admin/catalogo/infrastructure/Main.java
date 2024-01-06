@@ -1,6 +1,5 @@
 package dev.luanfernandes.admin.catalogo.infrastructure;
 
-
 import dev.luanfernandes.admin.catalogo.application.UseCase;
 
 public class Main {

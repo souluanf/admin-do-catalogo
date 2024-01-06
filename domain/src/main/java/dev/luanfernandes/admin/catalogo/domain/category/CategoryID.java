@@ -1,7 +1,6 @@
 package dev.luanfernandes.admin.catalogo.domain.category;
 
 import dev.luanfernandes.admin.catalogo.domain.Identifier;
-
 import java.util.Objects;
 import java.util.UUID;
 

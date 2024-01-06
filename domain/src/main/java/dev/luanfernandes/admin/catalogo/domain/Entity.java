@@ -1,7 +1,6 @@
 package dev.luanfernandes.admin.catalogo.domain;
 
 import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
-
 import java.util.Objects;
 
 public abstract class Entity<ID extends Identifier> {

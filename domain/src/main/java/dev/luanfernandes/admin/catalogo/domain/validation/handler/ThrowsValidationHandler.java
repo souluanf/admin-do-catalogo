@@ -3,7 +3,6 @@ package dev.luanfernandes.admin.catalogo.domain.validation.handler;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
-
 import java.util.List;
 
 public class ThrowsValidationHandler implements ValidationHandler {
