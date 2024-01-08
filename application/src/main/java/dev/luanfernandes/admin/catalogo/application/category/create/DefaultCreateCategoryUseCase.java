@@ -2,7 +2,7 @@ package dev.luanfernandes.admin.catalogo.application.category.create;
 
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
-import dev.luanfernandes.admin.catalogo.domain.validation.handler.ThrowsValidationHandler;
+import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import java.util.Objects;
 
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
@@ -17,8 +17,13 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.active();
+
+        final var notification = Notification.create();
         final var aCategory = Category.newCategory(aName, aDescription, isActive);
-        aCategory.validate(new ThrowsValidationHandler());
+        aCategory.validate(notification);
+
+        if (notification.hasErrors()) {}
+
         return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
     }
 }
