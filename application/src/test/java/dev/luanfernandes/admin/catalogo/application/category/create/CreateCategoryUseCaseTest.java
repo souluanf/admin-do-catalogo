@@ -2,7 +2,6 @@ package dev.luanfernandes.admin.catalogo.application.category.create;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -11,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
-import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +33,9 @@ class CreateCategoryUseCaseTest {
         final var expectedActive = true;
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedActive);
         when(categoryGateway.create(any())).thenAnswer(returnsFirstArg());
-        final var actualOutput = useCase.execute(aCommand);
+
+        final var actualOutput = useCase.execute(aCommand).get();
+
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
         verify(categoryGateway, times(1))
@@ -54,9 +54,13 @@ class CreateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedActive = true;
         final var expectedErrorMessage = "'name' should not be null";
+        final var expectedErrorCount = 1;
+
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedActive);
-        final var actualException = assertThrows(DomainException.class, () -> useCase.execute(aCommand));
-        assertEquals(expectedErrorMessage, actualException.getMessage());
+        final var notification = useCase.execute(aCommand).getLeft();
+
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(categoryGateway, times(0)).create(any());
     }
@@ -68,7 +72,7 @@ class CreateCategoryUseCaseTest {
         final var expectedActive = false;
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedActive);
         when(categoryGateway.create(any())).thenAnswer(returnsFirstArg());
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
         verify(categoryGateway, times(1))
@@ -87,10 +91,21 @@ class CreateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedActive = true;
         final var expectedErrorMessage = "Gateway error";
+        final var expectedErrorCount = 1;
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedActive);
         when(categoryGateway.create(any())).thenThrow(new IllegalStateException(expectedErrorMessage));
-        final var actualException = assertThrows(IllegalStateException.class, () -> useCase.execute(aCommand));
-        assertEquals(expectedErrorMessage, actualException.getMessage());
-        verify(categoryGateway, times(1)).create(any());
+
+        final var notification = useCase.execute(aCommand).getLeft();
+
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
+        verify(categoryGateway, times(1))
+                .create(argThat(category -> Objects.equals(expectedName, category.getName())
+                && Objects.equals(expectedDescription, category.getDescription())
+                && Objects.equals(expectedActive, category.isActive())
+                && Objects.nonNull(category.getId())
+                && Objects.nonNull(category.getCreatedAt())
+                && Objects.nonNull(category.getUpdatedAt())
+                && Objects.isNull(category.getDeletedAt())));
     }
 }

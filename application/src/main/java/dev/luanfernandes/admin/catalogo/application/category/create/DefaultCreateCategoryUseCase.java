@@ -1,5 +1,7 @@
 package dev.luanfernandes.admin.catalogo.application.category.create;
 
+import static io.vavr.API.Try;
+
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
@@ -23,8 +25,12 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
         final var aCategory = Category.newCategory(aName, aDescription, isActive);
         aCategory.validate(notification);
 
-        if (notification.hasErrors()) {}
+        return notification.hasErrors() ? Either.left(notification) : create(aCategory);
+    }
 
-        return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
+    private Either<Notification, CreateCategoryOutput> create(final Category aCategory) {
+        return Try(() -> this.categoryGateway.create(aCategory))
+                .toEither()
+                .bimap(Notification::create, CreateCategoryOutput::from);
     }
 }
