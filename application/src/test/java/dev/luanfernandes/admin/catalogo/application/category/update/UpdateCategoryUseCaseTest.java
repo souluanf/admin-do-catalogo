@@ -40,7 +40,7 @@ class UpdateCategoryUseCaseTest {
         final var aCommand =
                 UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive);
 
-        when(categoryGateway.findByID(eq(expectedId))).thenReturn(Optional.of(aCategory));
+        when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.of(aCategory));
         when(categoryGateway.update(any())).thenAnswer(returnsFirstArg());
 
         final var actualOutput = useCase.execute(aCommand).get();
@@ -48,14 +48,14 @@ class UpdateCategoryUseCaseTest {
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
 
-        verify(categoryGateway, times(1)).findByID(eq(expectedId));
+        verify(categoryGateway, times(1)).findById(eq(expectedId));
         verify(categoryGateway, times(1))
                 .update(argThat(anUpdatedCategory -> Objects.equals(expectedName, anUpdatedCategory.getName())
                         && Objects.equals(expectedDescription, anUpdatedCategory.getDescription())
                         && Objects.equals(expectedActive, anUpdatedCategory.isActive())
                         && Objects.equals(expectedId, anUpdatedCategory.getId())
                         && Objects.equals(aCategory.getCreatedAt(), anUpdatedCategory.getCreatedAt())
-                        && aCategory.getCreatedAt().isBefore(anUpdatedCategory.getUpdatedAt())
+                        && aCategory.getUpdatedAt().isBefore(anUpdatedCategory.getUpdatedAt())
                         && Objects.isNull(anUpdatedCategory.getDeletedAt())));
     }
 }
