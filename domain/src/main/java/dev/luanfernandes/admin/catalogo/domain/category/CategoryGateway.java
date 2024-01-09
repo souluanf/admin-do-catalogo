@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface CategoryGateway {
     Category create(Category aCategory);
 
-    Category delete(CategoryID anId);
+    Category deleteById(CategoryID anId);
 
     Optional<Category> findById(CategoryID anId);
 
