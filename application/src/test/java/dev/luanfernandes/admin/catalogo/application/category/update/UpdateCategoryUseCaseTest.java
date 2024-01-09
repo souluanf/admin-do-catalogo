@@ -40,7 +40,7 @@ class UpdateCategoryUseCaseTest {
         final var aCommand =
                 UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedActive);
 
-        when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.of(aCategory));
+        when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.of(Category.with(aCategory)));
         when(categoryGateway.update(any())).thenAnswer(returnsFirstArg());
 
         final var actualOutput = useCase.execute(aCommand).get();
