@@ -1,4 +1,4 @@
-package dev.luanfernandes.admin.catalogo.application.category.retrieve;
+package dev.luanfernandes.admin.catalogo.application.category.retrieve.get;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class GetCategoryByIdUseCaseTest {
 
     @InjectMocks
-    private DegaultGetCategoryByIdUseCase useCase;
+    private DefaultGetCategoryByIdUseCase useCase;
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -48,15 +48,15 @@ class GetCategoryByIdUseCaseTest {
         assertEquals(expectedId, actualCategory.id());
         assertEquals(expectedName, actualCategory.name());
         assertEquals(expectedDescription, actualCategory.description());
-        assertEquals(expectedActive, actualCategory.isActive());
+        assertEquals(expectedActive, actualCategory.active());
         assertEquals(aCategory.getCreatedAt(), actualCategory.createdAt());
-        assertEquals(aCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
-        assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
+        assertEquals(aCategory.getUpdatedAt(), actualCategory.updatedAt());
+        assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
     }
 
     @Test
     void givenAnInvalidId_whenCallsGetCategory_thenShouldReturnNotFound() {
-        final var expectedErrorMessage = "Category not found";
+        final var expectedErrorMessage = "Category with id 123 not found";
         final var expectedId = CategoryID.from("123");
 
         when(categoryGateway.findById(eq(expectedId))).thenReturn(Optional.empty());
