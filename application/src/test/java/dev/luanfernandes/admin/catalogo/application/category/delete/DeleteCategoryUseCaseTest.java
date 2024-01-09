@@ -36,10 +36,9 @@ class DeleteCategoryUseCaseTest {
     @Test
     void givenAValidId_whenCallsDeleteCategory_thenShouldBeOK() {
         final var aCategory = Category.newCategory("Filmes", "A categoria mais assistida", true);
-
         final var expectedId = aCategory.getId();
 
-        doNothing().when(categoryGateway.deleteById(eq(expectedId)));
+        doNothing().when(categoryGateway).deleteById(eq(expectedId));
 
         assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
 
@@ -50,7 +49,7 @@ class DeleteCategoryUseCaseTest {
     void givenAnInValidId_whenCallsDeleteCategory_thenShouldBeOK() {
         final var expectedId = CategoryID.from("123");
 
-        doNothing().when(categoryGateway.deleteById(eq(expectedId)));
+        doNothing().when(categoryGateway).deleteById(eq(expectedId));
 
         assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
 
@@ -63,7 +62,9 @@ class DeleteCategoryUseCaseTest {
 
         final var expectedId = aCategory.getId();
 
-        doThrow(new IllegalStateException("Gateway error")).when(categoryGateway.deleteById(eq(expectedId)));
+        doThrow(new IllegalStateException("Gateway error"))
+                .when(categoryGateway)
+                .deleteById(eq(expectedId));
 
         assertThrows(IllegalStateException.class, () -> useCase.execute(expectedId.getValue()));
 
