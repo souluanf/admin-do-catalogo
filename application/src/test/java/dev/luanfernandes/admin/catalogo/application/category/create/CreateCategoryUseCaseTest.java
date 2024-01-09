@@ -24,7 +24,7 @@ class CreateCategoryUseCaseTest {
     private CategoryGateway categoryGateway;
 
     @InjectMocks
-    DefaultCreateCategoryUseCase useCase;
+    private DefaultCreateCategoryUseCase useCase;
 
     @Test
     void givenAValidCommand_whenCallsCreateCategory_thenShouldReturnCategoryID() {
@@ -101,11 +101,11 @@ class CreateCategoryUseCaseTest {
         assertEquals(expectedErrorMessage, notification.firstError().message());
         verify(categoryGateway, times(1))
                 .create(argThat(category -> Objects.equals(expectedName, category.getName())
-                && Objects.equals(expectedDescription, category.getDescription())
-                && Objects.equals(expectedActive, category.isActive())
-                && Objects.nonNull(category.getId())
-                && Objects.nonNull(category.getCreatedAt())
-                && Objects.nonNull(category.getUpdatedAt())
-                && Objects.isNull(category.getDeletedAt())));
+                        && Objects.equals(expectedDescription, category.getDescription())
+                        && Objects.equals(expectedActive, category.isActive())
+                        && Objects.nonNull(category.getId())
+                        && Objects.nonNull(category.getCreatedAt())
+                        && Objects.nonNull(category.getUpdatedAt())
+                        && Objects.isNull(category.getDeletedAt())));
     }
 }
