@@ -1,4 +1,10 @@
-create  table category(
-    id BINARY(16) not null primary key,
-    name varchar(255) not null
+create table category
+(
+    id          VARCHAR(36)   NOT NULL PRIMARY KEY,
+    name        VARCHAR(255)  NOT NULL,
+    description VARCHAR(4000) NULL,
+    active      BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at  DATETIME(6)   NOT NULL,
+    updated_at  DATETIME(6)   NOT NULL,
+    deleted_at  DATETIME(6)   NULL
 );
