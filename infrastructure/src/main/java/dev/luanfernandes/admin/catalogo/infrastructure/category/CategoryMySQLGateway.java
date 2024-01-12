@@ -6,9 +6,8 @@ import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.category.CategorySearchQuery;
 import dev.luanfernandes.admin.catalogo.domain.pagination.Pagination;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {
@@ -25,9 +24,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public void deleteById(CategoryID anId) {
-
-    }
+    public void deleteById(CategoryID anId) {}
 
     @Override
     public Optional<Category> findById(CategoryID anId) {
