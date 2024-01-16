@@ -21,6 +21,7 @@
 - Spring Framework
 - Spring Boot
 - Spring Data JPA
+- Specification API
 - H2 Database
 - Spotless
 - Flyway
