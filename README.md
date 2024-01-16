@@ -13,11 +13,8 @@
 ## Ferramentas necessárias
 - JDK 17
 - Docker
-- Docker Compose
 - Gradle
 - MySQL
-- Keycloak
-- Postman
 
 ## Tecnologias utilizadas
 - Java 17
