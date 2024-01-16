@@ -10,6 +10,8 @@ import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.Cate
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
+import static java.util.Optional.empty;
+
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {
 
@@ -29,7 +31,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Optional<Category> findById(CategoryID anId) {
-        return Optional.empty();
+        return empty();
     }
 
     @Override

@@ -5,16 +5,19 @@ import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
 import java.util.List;
 
+import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
+import static java.util.List.of;
+
 public class ThrowsValidationHandler implements ValidationHandler {
 
     @Override
     public ValidationHandler append(final Error anError) {
-        throw DomainException.with(anError);
+        throw with(anError);
     }
 
     @Override
     public ValidationHandler append(final ValidationHandler anHandler) {
-        throw DomainException.with(anHandler.getErrors());
+        throw with(anHandler.getErrors());
     }
 
     @Override
@@ -22,13 +25,13 @@ public class ThrowsValidationHandler implements ValidationHandler {
         try {
             aValidation.validate();
         } catch (final Exception e) {
-            throw DomainException.with(List.of(new Error(e.getMessage())));
+            throw with(of(new Error(e.getMessage())));
         }
         return this;
     }
 
     @Override
     public List<Error> getErrors() {
-        return List.of();
+        return of();
     }
 }

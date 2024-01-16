@@ -4,16 +4,18 @@ import dev.luanfernandes.admin.catalogo.domain.Identifier;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
+
 public class CategoryID extends Identifier {
     private final String value;
 
     private CategoryID(final String value) {
-        Objects.requireNonNull(value, "CategoryId must not be null");
+        Objects.requireNonNull(value, "'id' should not be null");
         this.value = value;
     }
 
     public static CategoryID unique() {
-        return CategoryID.from(UUID.randomUUID());
+        return CategoryID.from(randomUUID());
     }
 
     public static CategoryID from(final String anId) {

@@ -1,6 +1,8 @@
 package dev.luanfernandes.admin.catalogo.application.category.create;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.Category.newCategory;
 import static io.vavr.API.Try;
+import static io.vavr.control.Either.left;
 
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
@@ -22,10 +24,10 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
         final var isActive = aCommand.active();
 
         final var notification = Notification.create();
-        final var aCategory = Category.newCategory(aName, aDescription, isActive);
+        final var aCategory = newCategory(aName, aDescription, isActive);
         aCategory.validate(notification);
 
-        return notification.hasErrors() ? Either.left(notification) : create(aCategory);
+        return notification.hasErrors() ? left(notification) : create(aCategory);
     }
 
     private Either<Notification, CreateCategoryOutput> create(final Category aCategory) {

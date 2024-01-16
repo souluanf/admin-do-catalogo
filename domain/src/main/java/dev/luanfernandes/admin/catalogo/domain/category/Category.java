@@ -1,5 +1,9 @@
 package dev.luanfernandes.admin.catalogo.domain.category;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.unique;
+import static java.time.Instant.now;
+import static java.util.Objects.requireNonNull;
+
 import dev.luanfernandes.admin.catalogo.domain.AggregateRoot;
 import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
 import java.time.Instant;
@@ -24,14 +28,14 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         this.name = aName;
         this.description = aDescription;
         this.active = isActive;
-        this.createdAt = aCreationDate;
-        this.updatedAt = anUpdateDate;
+        this.createdAt = requireNonNull(aCreationDate, "'createdAt' should not be null");
+        this.updatedAt = requireNonNull(anUpdateDate, "'updatedAt' should not be null");
         this.deletedAt = aDeleteDate;
     }
 
     public static Category newCategory(final String name, final String description, final boolean active) {
-        final var id = CategoryID.unique();
-        final var now = Instant.now();
+        final var id = unique();
+        final var now = now();
         final var deletedAt = active ? null : now;
         return new Category(id, name, description, active, now, now, deletedAt);
     }
@@ -66,16 +70,16 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     public Category activate() {
         this.deletedAt = null;
         this.active = true;
-        this.updatedAt = Instant.now();
+        this.updatedAt = now();
         return this;
     }
 
     public Category deactivate() {
         if (getDeletedAt() == null) {
-            this.deletedAt = Instant.now();
+            this.deletedAt = now();
         }
         this.active = false;
-        this.updatedAt = Instant.now();
+        this.updatedAt = now();
         return this;
     }
 
@@ -87,7 +91,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         }
         this.name = aName;
         this.description = aDescription;
-        this.updatedAt = Instant.now();
+        this.updatedAt = now();
         return this;
     }
 

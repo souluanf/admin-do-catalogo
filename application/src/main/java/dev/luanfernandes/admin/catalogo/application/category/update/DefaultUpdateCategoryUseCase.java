@@ -1,6 +1,9 @@
 package dev.luanfernandes.admin.catalogo.application.category.update;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
+import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
 import static io.vavr.API.Try;
+import static io.vavr.control.Either.left;
 import static java.util.Objects.requireNonNull;
 
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
@@ -21,14 +24,14 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
 
     @Override
     public Either<Notification, UpdateCategoryOutput> execute(final UpdateCategoryCommand aCommand) {
-        final var anId = CategoryID.from(aCommand.id());
+        final var anId = from(aCommand.id());
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
         Category aCategory = this.categoryGateway.findById(anId).orElseThrow(notFound(anId));
         final var notification = Notification.create();
         aCategory.update(aName, aDescription, isActive).validate(notification);
-        return notification.hasErrors() ? Either.left(notification) : update(aCategory);
+        return notification.hasErrors() ? left(notification) : update(aCategory);
     }
 
     private Either<Notification, UpdateCategoryOutput> update(Category aCategory) {
@@ -38,6 +41,6 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
     }
 
     private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(new Error("Category with id %s not found".formatted(anId.getValue())));
+        return () -> with(new Error("Category with id %s not found".formatted(anId.getValue())));
     }
 }

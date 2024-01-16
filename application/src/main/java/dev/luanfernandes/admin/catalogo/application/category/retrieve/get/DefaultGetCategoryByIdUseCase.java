@@ -7,17 +7,21 @@ import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
+import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
+import static java.util.Objects.requireNonNull;
+
 public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
 
     private final CategoryGateway categoryGateway;
 
     public DefaultGetCategoryByIdUseCase(final CategoryGateway categoryGateway) {
-        this.categoryGateway = Objects.requireNonNull(categoryGateway);
+        this.categoryGateway = requireNonNull(categoryGateway);
     }
 
     @Override
     public CategoryOutput execute(String anIn) {
-        final var aCategoryId = CategoryID.from(anIn);
+        final var aCategoryId = from(anIn);
         return this.categoryGateway
                 .findById(aCategoryId)
                 .map(CategoryOutput::from)
@@ -25,6 +29,6 @@ public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
     }
 
     private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(new Error("Category with id %s not found".formatted(anId.getValue())));
+        return () -> with(new Error("Category with id %s not found".formatted(anId.getValue())));
     }
 }

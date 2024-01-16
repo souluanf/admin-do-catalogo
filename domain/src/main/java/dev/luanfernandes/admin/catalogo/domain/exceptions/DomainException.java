@@ -3,6 +3,8 @@ package dev.luanfernandes.admin.catalogo.domain.exceptions;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import java.util.List;
 
+import static java.util.List.of;
+
 public class DomainException extends NoStackTraceException {
     private final List<Error> errors;
 
@@ -12,7 +14,7 @@ public class DomainException extends NoStackTraceException {
     }
 
     public static DomainException with(final Error anErrors) {
-        return new DomainException(anErrors.message(), List.of(anErrors));
+        return new DomainException(anErrors.message(), of(anErrors));
     }
 
     public static DomainException with(final List<Error> anErrors) {

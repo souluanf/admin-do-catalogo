@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.Category.with;
+
 @Entity
 @Table(name = "category")
 public class CategoryJpaEntity {
@@ -64,7 +66,7 @@ public class CategoryJpaEntity {
     }
 
     public Category toAggregate() {
-        return Category.with(
+        return with(
                 CategoryID.from(getId()),
                 getName(),
                 getDescription(),
