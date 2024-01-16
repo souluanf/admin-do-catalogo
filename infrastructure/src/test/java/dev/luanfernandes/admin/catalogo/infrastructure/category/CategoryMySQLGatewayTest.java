@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.infrastructure.MySQLGatewayTest;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
@@ -103,10 +102,9 @@ class CategoryMySQLGatewayTest {
         assertNull(actualEntity.getDeletedAt());
     }
 
-
     @Test
-    void givenAPrePersistedCategoryAndValidCategoryID_whenTryToDeleteIt_shouldDeleteCategory(){
-        final var  aCategory = newCategory("Filmes", "A categoria mais assistida", true);
+    void givenAPrePersistedCategoryAndValidCategoryID_whenTryToDeleteIt_shouldDeleteCategory() {
+        final var aCategory = newCategory("Filmes", "A categoria mais assistida", true);
         assertEquals(0, categoryRepository.count());
 
         final var actualCategory = categoryGateway.create(aCategory);
@@ -115,11 +113,10 @@ class CategoryMySQLGatewayTest {
 
         categoryGateway.deleteById(actualCategory.getId());
         assertEquals(0, categoryRepository.count());
-
     }
 
     @Test
-    void givenAnValidCategoryID_whenTryToDeleteIt_shouldDeleteCategory(){
+    void givenAnValidCategoryID_whenTryToDeleteIt_shouldDeleteCategory() {
         assertEquals(0, categoryRepository.count());
         categoryGateway.deleteById(from("invalid"));
         assertEquals(0, categoryRepository.count());
@@ -147,8 +144,17 @@ class CategoryMySQLGatewayTest {
         assertEquals(expectedDescription, actualCategory.getDescription());
         assertEquals(expectedActive, actualCategory.isActive());
         assertEquals(aCategory.getCreatedAt(), actualCategory.getCreatedAt());
-        assertTrue(aCategory.getUpdatedAt().isBefore(actualCategory.getUpdatedAt()));
+        assertEquals(aCategory.getUpdatedAt(), actualCategory.getUpdatedAt());
         assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
         assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    void givenAValidCategoryIDNotStored_whenCallsFindById_shouldReturnEmpty() {
+        assertEquals(0, categoryRepository.count());
+
+        final var actualCategory = categoryGateway.findById(CategoryID.from(""));
+
+        assertTrue(actualCategory.isEmpty());
     }
 }

@@ -1,7 +1,5 @@
 package dev.luanfernandes.admin.catalogo.infrastructure.category;
 
-import static java.util.Optional.empty;
-
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
@@ -36,7 +34,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Optional<Category> findById(CategoryID anId) {
-        return empty();
+        return this.categoryRepository.findById(anId.getValue()).map(CategoryJpaEntity::toAggregate);
     }
 
     @Override
