@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.infrastructure.MySQLGatewayTest;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
