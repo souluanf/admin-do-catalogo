@@ -1,5 +1,6 @@
 package dev.luanfernandes.admin.catalogo.infrastructure.category;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.Category.newCategory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +26,7 @@ class CategoryMySQLGatewayTest {
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedActive = true;
-        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedActive);
+        final var aCategory = newCategory(expectedName, expectedDescription, expectedActive);
 
         assertEquals(0, categoryRepository.count());
 
@@ -59,11 +60,18 @@ class CategoryMySQLGatewayTest {
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedActive = true;
-        final var aCategory = Category.newCategory("Film", null, expectedActive);
+        final var aCategory = newCategory("Film", null, expectedActive);
 
         assertEquals(0, categoryRepository.count());
 
         categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
+
+        final var actualInvalidEntity =
+                categoryRepository.findById(aCategory.getId().getValue()).get();
+
+        assertEquals("Film", actualInvalidEntity.getName());
+        assertNull(actualInvalidEntity.getDescription());
+        assertEquals(expectedActive, actualInvalidEntity.isActive());
 
         assertEquals(1, categoryRepository.count());
 
