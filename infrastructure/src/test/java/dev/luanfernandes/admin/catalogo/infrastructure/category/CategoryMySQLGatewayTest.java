@@ -165,7 +165,7 @@ class CategoryMySQLGatewayTest {
     void givenPrePersistedCategory_whenCallsFindAll_shouldReturnPaginated() {
         final var expectedPage = 0;
         final var expectedPerPage = 1;
-        final var expectedTotal = 1;
+        final var expectedTotal = 3;
 
         final var films = newCategory("Filmes", null, true);
         final var series = newCategory("Séries", null, true);
@@ -173,7 +173,7 @@ class CategoryMySQLGatewayTest {
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        categoryRepository.saveAllAndFlush(of(
+        categoryRepository.saveAll(of(
                 CategoryJpaEntity.from(films), CategoryJpaEntity.from(series), CategoryJpaEntity.from(documentaries)));
 
         Assertions.assertEquals(3, categoryRepository.count());
@@ -184,7 +184,7 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(
                 documentaries.getId(), actualResult.items().get(0).getId());
     }
@@ -201,14 +201,14 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
+        Assertions.assertEquals(0, actualResult.items().size());
     }
 
     @Test
     void givenFollowPagination_whenCallsFindAllWithPage1_shouldReturnPaginated() {
         var expectedPage = 0;
         final var expectedPerPage = 1;
-        final var expectedTotal = 1;
+        final var expectedTotal = 3;
 
         final var films = newCategory("Filmes", null, true);
         final var series = newCategory("Séries", null, true);
@@ -221,18 +221,16 @@ class CategoryMySQLGatewayTest {
 
         Assertions.assertEquals(3, categoryRepository.count());
 
-        // page 0
         var query = new CategorySearchQuery(0, 1, "", "name", "asc");
         var actualResult = categoryGateway.findAll(query);
 
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(
                 documentaries.getId(), actualResult.items().get(0).getId());
 
-        // page 1
         expectedPage = 1;
         query = new CategorySearchQuery(1, 1, "", "name", "asc");
         actualResult = categoryGateway.findAll(query);
@@ -240,18 +238,17 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(films.getId(), actualResult.items().get(0).getId());
 
-        // page 2
         expectedPage = 2;
-        query = new CategorySearchQuery(1, 1, "", "name", "asc");
+        query = new CategorySearchQuery(2, 1, "", "name", "asc");
         actualResult = categoryGateway.findAll(query);
 
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(series.getId(), actualResult.items().get(0).getId());
     }
 
@@ -267,7 +264,7 @@ class CategoryMySQLGatewayTest {
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        categoryRepository.saveAllAndFlush(of(
+        categoryRepository.saveAll(of(
                 CategoryJpaEntity.from(films), CategoryJpaEntity.from(series), CategoryJpaEntity.from(documentaries)));
 
         Assertions.assertEquals(3, categoryRepository.count());
@@ -278,7 +275,7 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(
                 documentaries.getId(), actualResult.items().get(0).getId());
     }
@@ -296,7 +293,7 @@ class CategoryMySQLGatewayTest {
 
         Assertions.assertEquals(0, categoryRepository.count());
 
-        categoryRepository.saveAllAndFlush(of(
+        categoryRepository.saveAll(of(
                 CategoryJpaEntity.from(films), CategoryJpaEntity.from(series), CategoryJpaEntity.from(documentaries)));
 
         Assertions.assertEquals(3, categoryRepository.count());
@@ -307,7 +304,7 @@ class CategoryMySQLGatewayTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(expectedTotal, actualResult.total());
-        Assertions.assertEquals(expectedPage, actualResult.items().size());
+        Assertions.assertEquals(expectedPerPage, actualResult.items().size());
         Assertions.assertEquals(films.getId(), actualResult.items().get(0).getId());
     }
 }
