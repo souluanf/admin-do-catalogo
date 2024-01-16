@@ -1,12 +1,11 @@
 package dev.luanfernandes.admin.catalogo.domain.validation.handler;
 
-import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
+import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
+import static java.util.List.of;
+
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.ValidationHandler;
 import java.util.List;
-
-import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
-import static java.util.List.of;
 
 public class ThrowsValidationHandler implements ValidationHandler {
 

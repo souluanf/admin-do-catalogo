@@ -1,9 +1,9 @@
 package dev.luanfernandes.admin.catalogo.domain.exceptions;
 
+import static java.util.List.of;
+
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import java.util.List;
-
-import static java.util.List.of;
 
 public class DomainException extends NoStackTraceException {
     private final List<Error> errors;

@@ -1,5 +1,7 @@
 package dev.luanfernandes.admin.catalogo.infrastructure.category;
 
+import static java.util.Optional.empty;
+
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
@@ -9,8 +11,6 @@ import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.Cate
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-
-import static java.util.Optional.empty;
 
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {

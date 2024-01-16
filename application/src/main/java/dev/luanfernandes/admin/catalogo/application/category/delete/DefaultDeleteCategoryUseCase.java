@@ -4,7 +4,6 @@ import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
 import static java.util.Objects.requireNonNull;
 
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
-import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 
 public class DefaultDeleteCategoryUseCase extends DeleteCategoryUseCase {
 

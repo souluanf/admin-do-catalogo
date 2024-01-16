@@ -1,5 +1,7 @@
 package dev.luanfernandes.admin.catalogo.infrastructure.category.persistence;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.Category.with;
+
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import jakarta.persistence.Column;
@@ -7,8 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
-
-import static dev.luanfernandes.admin.catalogo.domain.category.Category.with;
 
 @Entity
 @Table(name = "category")

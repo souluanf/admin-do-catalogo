@@ -1,10 +1,10 @@
 package dev.luanfernandes.admin.catalogo.domain.category;
 
+import static java.util.UUID.randomUUID;
+
 import dev.luanfernandes.admin.catalogo.domain.Identifier;
 import java.util.Objects;
 import java.util.UUID;
-
-import static java.util.UUID.randomUUID;
 
 public class CategoryID extends Identifier {
     private final String value;

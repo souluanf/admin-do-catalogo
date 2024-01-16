@@ -1,15 +1,14 @@
 package dev.luanfernandes.admin.catalogo.application.category.retrieve.get;
 
+import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
+import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
+import static java.util.Objects.requireNonNull;
+
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
-import java.util.Objects;
 import java.util.function.Supplier;
-
-import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
-import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
-import static java.util.Objects.requireNonNull;
 
 public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
 

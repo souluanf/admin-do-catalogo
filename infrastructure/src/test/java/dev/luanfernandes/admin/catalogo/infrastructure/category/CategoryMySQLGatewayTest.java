@@ -67,7 +67,6 @@ class CategoryMySQLGatewayTest {
 
         assertEquals(1, categoryRepository.count());
 
-
         final var anUpdatedCategory = aCategory.clone().update(expectedName, expectedDescription, expectedActive);
         final var actualCategory = categoryGateway.update(anUpdatedCategory);
 
@@ -82,7 +81,8 @@ class CategoryMySQLGatewayTest {
         assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
         assertNull(actualCategory.getDeletedAt());
 
-        final var actualEntity = categoryRepository.findById(aCategory.getId().getValue()).get();
+        final var actualEntity =
+                categoryRepository.findById(aCategory.getId().getValue()).get();
         assertEquals(aCategory.getId().getValue(), actualEntity.getId());
         assertEquals(expectedName, actualEntity.getName());
         assertEquals(expectedDescription, actualEntity.getDescription());
