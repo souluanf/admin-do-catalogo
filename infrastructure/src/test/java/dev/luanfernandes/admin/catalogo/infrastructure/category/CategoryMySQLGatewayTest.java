@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.luanfernandes.admin.catalogo.MySQLGatewayTest;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.category.CategorySearchQuery;
-import dev.luanfernandes.admin.catalogo.infrastructure.MySQLGatewayTest;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
