@@ -53,11 +53,6 @@ class GetCategoryUseCaseIT {
         assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
     }
 
-    private void save(final Category... aCategory) {
-        categoryRepository.saveAllAndFlush(
-                stream(aCategory).map(CategoryJpaEntity::from).toList());
-    }
-
     @Test
     void givenAnInvalidId_whenCallsGetCategory_thenShouldReturnNotFound() {
         final var expectedErrorMessage = "Category with id 123 not found";
@@ -80,5 +75,10 @@ class GetCategoryUseCaseIT {
                 Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(expectedId.getValue()));
 
         assertEquals(expectedErrorMessage, actualException.getMessage());
+    }
+
+    private void save(final Category... aCategory) {
+        categoryRepository.saveAllAndFlush(
+                stream(aCategory).map(CategoryJpaEntity::from).toList());
     }
 }
