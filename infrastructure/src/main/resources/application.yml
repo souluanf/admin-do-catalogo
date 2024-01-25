@@ -32,3 +32,17 @@ spring:
         connection.provider_disables_autocommit: true
     # Para aumentar a performance ao máximo, desabilitamos o auto-commit e o open-in-view
     # https://vladmihalcea.com/why-you-should-always-use-hibernate-connection-provider_disables_autocommit-for-resource-local-jpa-transactions
+  mvc:
+    servlet:
+      path: /
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    disable-swagger-default-url: true
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+swagger-servers-urls: http://localhost:${server.port}${spring.mvc.servlet.path}, http://127.0.0.1:${server.port}${spring.mvc.servlet.path}
