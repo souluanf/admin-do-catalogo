@@ -12,11 +12,9 @@ import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import dev.luanfernandes.admin.catalogo.infrastructure.api.CategoryAPI;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import java.net.URI;
-import java.util.Objects;
-import java.util.function.Function;
-
 import dev.luanfernandes.admin.catalogo.infrastructure.category.presenters.CategoryApiPresenter;
+import java.net.URI;
+import java.util.function.Function;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +25,7 @@ public class CategoryController implements CategoryAPI {
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
 
     public CategoryController(
-            final CreateCategoryUseCase createCategoryUseCase,
-            final GetCategoryByIdUseCase getCategoryByIdUseCase) {
+            final CreateCategoryUseCase createCategoryUseCase, final GetCategoryByIdUseCase getCategoryByIdUseCase) {
         this.createCategoryUseCase = requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = requireNonNull(getCategoryByIdUseCase);
     }

@@ -172,8 +172,10 @@ class CategoryAPITest {
                 .andExpect(jsonPath("$.name", equalTo(expectedName)))
                 .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
                 .andExpect(jsonPath("$.is_active", equalTo(expectedActive)))
-                .andExpect(jsonPath("$.created_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(jsonPath(
+                        "$.created_at", equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath(
+                        "$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt())));
 
         verify(getCategoryByIdUseCase, times(1)).execute(eq(expectedId));
@@ -191,8 +193,6 @@ class CategoryAPITest {
 
         final var response = this.mvc.perform(request).andDo(print());
 
-        response
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+        response.andExpect(status().isNotFound()).andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
     }
 }

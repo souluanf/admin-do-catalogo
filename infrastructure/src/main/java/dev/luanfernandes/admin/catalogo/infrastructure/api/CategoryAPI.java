@@ -3,7 +3,6 @@ package dev.luanfernandes.admin.catalogo.infrastructure.api;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
-import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.CategoryOutput;
 import dev.luanfernandes.admin.catalogo.domain.pagination.Pagination;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
@@ -74,27 +73,26 @@ public interface CategoryAPI {
             @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
             @RequestParam(name = "direction", required = false, defaultValue = "ASC") final String direction);
 
-
     @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Get Category by id",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK"),
-                    @ApiResponse(
-                            responseCode = "422",
-                            description = "Forbidden",
-                            content =
-                            @Content(
-                                    mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-                                    schema = @Schema(implementation = ProblemDetail.class))),
-                    @ApiResponse(responseCode = "404", description = "Not Found"),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Server Error",
-                            content =
-                            @Content(
-                                    mediaType = APPLICATION_PROBLEM_JSON_VALUE,
-                                    schema = @Schema(implementation = ProblemDetail.class)))
+                @ApiResponse(responseCode = "200", description = "OK"),
+                @ApiResponse(
+                        responseCode = "422",
+                        description = "Forbidden",
+                        content =
+                                @Content(
+                                        mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                        schema = @Schema(implementation = ProblemDetail.class))),
+                @ApiResponse(responseCode = "404", description = "Not Found"),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Server Error",
+                        content =
+                                @Content(
+                                        mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                        schema = @Schema(implementation = ProblemDetail.class)))
             })
     CategoryApiOutput getById(@PathVariable(name = "id") String id);
 }
