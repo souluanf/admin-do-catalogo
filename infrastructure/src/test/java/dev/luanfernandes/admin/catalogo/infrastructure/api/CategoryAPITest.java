@@ -167,16 +167,14 @@ class CategoryAPITest {
         final var response = this.mvc.perform(request).andDo(print());
 
         response.andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", APPLICATION_JSON.toString()))
                 .andExpect(jsonPath("$.id", equalTo(expectedId)))
                 .andExpect(jsonPath("$.name", equalTo(expectedName)))
                 .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
                 .andExpect(jsonPath("$.is_active", equalTo(expectedActive)))
-                .andExpect(jsonPath(
-                        "$.created_at", equalTo(aCategory.getCreatedAt().toString())))
-                .andExpect(jsonPath(
-                        "$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
-                .andExpect(jsonPath(
-                        "$.deleted_at", equalTo(aCategory.getDeletedAt().toString())));
+                .andExpect(jsonPath("$.created_at", equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt())));
 
         verify(getCategoryByIdUseCase, times(1)).execute(eq(expectedId));
     }
@@ -186,10 +184,15 @@ class CategoryAPITest {
         final var expectedErrorMessage = "Category with id 123 not found";
         final var expectedId = CategoryID.from("123").getValue();
 
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenThrow(DomainException.with(new Error("Category with id %S was not found".formatted(expectedId))));
+
         final var request = get("/categories/{id}", expectedId);
 
         final var response = this.mvc.perform(request).andDo(print());
 
-        response.andExpect(status().isNotFound()).andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+        response
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
     }
 }
