@@ -4,10 +4,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -18,6 +20,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.luanfernandes.admin.catalogo.ControllerTest;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryOutput;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryUseCase;
+import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.CategoryOutput;
+import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
+import dev.luanfernandes.admin.catalogo.domain.category.Category;
+import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
@@ -38,6 +44,9 @@ class CategoryAPITest {
 
     @MockBean
     private CreateCategoryUseCase createCategoryUseCase;
+
+    @MockBean
+    private GetCategoryByIdUseCase getCategoryByIdUseCase;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -139,5 +148,48 @@ class CategoryAPITest {
             Objects.equals(expectedActive, command.active());
             return true;
         }));
+    }
+
+    @Test
+    void givenAValidId_whenCallsGetCategory_thenShouldReturnCategory() throws Exception {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedActive = true;
+
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedActive);
+
+        final var expectedId = aCategory.getId().getValue();
+
+        when(getCategoryByIdUseCase.execute(any())).thenReturn(CategoryOutput.from(aCategory));
+
+        final var request = get("/categories/{id}", expectedId);
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(expectedId)))
+                .andExpect(jsonPath("$.name", equalTo(expectedName)))
+                .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
+                .andExpect(jsonPath("$.is_active", equalTo(expectedActive)))
+                .andExpect(jsonPath(
+                        "$.created_at", equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath(
+                        "$.updated_at", equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(jsonPath(
+                        "$.deleted_at", equalTo(aCategory.getDeletedAt().toString())));
+
+        verify(getCategoryByIdUseCase, times(1)).execute(eq(expectedId));
+    }
+
+    @Test
+    void givenAnInvalidId_whenCallsGetCategory_thenShouldReturnNotFound() throws Exception {
+        final var expectedErrorMessage = "Category with id 123 not found";
+        final var expectedId = CategoryID.from("123").getValue();
+
+        final var request = get("/categories/{id}", expectedId);
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        response.andExpect(status().isNotFound()).andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
     }
 }
