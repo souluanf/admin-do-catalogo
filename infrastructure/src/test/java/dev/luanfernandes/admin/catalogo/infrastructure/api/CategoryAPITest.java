@@ -1,6 +1,7 @@
 package dev.luanfernandes.admin.catalogo.infrastructure.api;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
@@ -17,9 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.luanfernandes.admin.catalogo.ControllerTest;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryOutput;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryUseCase;
+import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
+import dev.luanfernandes.admin.catalogo.domain.validation.Error;
+import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.vavr.API;
 import java.util.Objects;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,6 +64,74 @@ class CategoryAPITest {
                         header().string("Location", "/categories/123"),
                         header().string("Content-Type", APPLICATION_JSON.toString()),
                         jsonPath("$.id", equalTo("123")));
+
+        verify(createCategoryUseCase, times(1)).execute(argThat(command -> {
+            Objects.equals(expectedName, command.name());
+            Objects.equals(expectedDescription, command.description());
+            Objects.equals(expectedActive, command.active());
+            return true;
+        }));
+    }
+
+    @Test
+    void givenAInvalidName_whenCallsCreateCategory_theShouldReturnNotification() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedActive = true;
+        final var expectedMessage = "name' should not be null";
+
+        final var anInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedActive);
+
+        when(createCategoryUseCase.execute(any()))
+                .thenReturn(API.Left(Notification.create(new Error(expectedMessage))));
+
+        final var request = post("/categories")
+                .contentType(APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(anInput));
+
+        this.mvc
+                .perform(request)
+                .andDo(print())
+                .andExpectAll(
+                        status().isUnprocessableEntity(),
+                        header().string("Location", Matchers.nullValue()),
+                        header().string("Content-Type", APPLICATION_JSON.toString()),
+                        jsonPath("$.errors", hasSize(1)),
+                        jsonPath("$.errors[0].message", equalTo(expectedMessage)));
+
+        verify(createCategoryUseCase, times(1)).execute(argThat(command -> {
+            Objects.equals(expectedName, command.name());
+            Objects.equals(expectedDescription, command.description());
+            Objects.equals(expectedActive, command.active());
+            return true;
+        }));
+    }
+
+    @Test
+    void givenAInvalidCommand_whenCallsCreateCategory_theShouldReturnDomainException() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedActive = true;
+        final var expectedMessage = "name' should not be null";
+
+        final var anInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedActive);
+
+        when(createCategoryUseCase.execute(any())).thenThrow(DomainException.with(new Error(expectedMessage)));
+
+        final var request = post("/categories")
+                .contentType(APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(anInput));
+
+        this.mvc
+                .perform(request)
+                .andDo(print())
+                .andExpectAll(
+                        status().isUnprocessableEntity(),
+                        header().string("Location", Matchers.nullValue()),
+                        header().string("Content-Type", APPLICATION_JSON.toString()),
+                        jsonPath("$.errors", hasSize(1)),
+                        jsonPath("$.message", equalTo(expectedMessage)),
+                        jsonPath("$.errors[0].message", equalTo(expectedMessage)));
 
         verify(createCategoryUseCase, times(1)).execute(argThat(command -> {
             Objects.equals(expectedName, command.name());
