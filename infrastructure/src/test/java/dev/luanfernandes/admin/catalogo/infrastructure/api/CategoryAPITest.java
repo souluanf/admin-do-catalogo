@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,6 +23,8 @@ import dev.luanfernandes.admin.catalogo.application.category.create.CreateCatego
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryUseCase;
 import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.CategoryOutput;
 import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
+import dev.luanfernandes.admin.catalogo.application.category.update.UpdateCategoryOutput;
+import dev.luanfernandes.admin.catalogo.application.category.update.UpdateCategoryUseCase;
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
@@ -29,6 +32,7 @@ import dev.luanfernandes.admin.catalogo.domain.exceptions.NotFoundException;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
+import dev.luanfernandes.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
 import io.vavr.API;
 import java.util.Objects;
 import org.hamcrest.Matchers;
@@ -48,6 +52,9 @@ class CategoryAPITest {
 
     @MockBean
     private GetCategoryByIdUseCase getCategoryByIdUseCase;
+
+    @MockBean
+    private UpdateCategoryUseCase updateCategoryUseCase;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -194,5 +201,32 @@ class CategoryAPITest {
         final var response = this.mvc.perform(request).andDo(print());
 
         response.andExpect(status().isNotFound()).andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+    }
+
+    @Test
+    void givenAValidCommand_whenCallsUpdateCategory_thenShouldReturnCategoryID() throws Exception {
+        final var expectedId = "123";
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedActive = true;
+
+        when(updateCategoryUseCase.execute(any())).thenReturn(API.Right(UpdateCategoryOutput.from(expectedId)));
+
+        final var aCommand = new UpdateCategoryApiInput(expectedName, expectedDescription, expectedActive);
+
+        final var request = put("/categories/{id}", expectedId)
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(aCommand));
+
+        final var response = this.mvc.perform(request).andDo(print());
+
+        response.andExpect(status().isNoContent())
+                .andExpect(header().string("Content-Type", APPLICATION_JSON.toString()));
+
+        verify(updateCategoryUseCase, times(1))
+                .execute(argThat(cmd -> Objects.equals(expectedName, cmd.name())
+                        && Objects.equals(expectedDescription, cmd.description())
+                        && Objects.equals(expectedActive, cmd.isActive())));
     }
 }
