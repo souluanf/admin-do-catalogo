@@ -1,7 +1,6 @@
 package dev.luanfernandes.admin.catalogo.application.category.update;
 
 import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
-import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
 import static io.vavr.API.Try;
 import static io.vavr.control.Either.left;
 import static java.util.Objects.requireNonNull;
@@ -10,7 +9,7 @@ import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
-import dev.luanfernandes.admin.catalogo.domain.validation.Error;
+import dev.luanfernandes.admin.catalogo.domain.exceptions.NotFoundException;
 import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 import java.util.function.Supplier;
@@ -41,6 +40,6 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
     }
 
     private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> with(new Error("Category with id %s not found".formatted(anId.getValue())));
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

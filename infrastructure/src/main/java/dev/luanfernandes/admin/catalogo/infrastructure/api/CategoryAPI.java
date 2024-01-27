@@ -6,6 +6,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import dev.luanfernandes.admin.catalogo.domain.pagination.Pagination;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
+import dev.luanfernandes.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -95,4 +97,26 @@ public interface CategoryAPI {
                                         schema = @Schema(implementation = ProblemDetail.class)))
             })
     CategoryApiOutput getById(@PathVariable(name = "id") String id);
+
+    @PutMapping(path = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Update Category by id",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Category updated"),
+                @ApiResponse(
+                        responseCode = "422",
+                        description = "Forbidden",
+                        content =
+                                @Content(
+                                        mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                        schema = @Schema(implementation = ProblemDetail.class))),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Server Error",
+                        content =
+                                @Content(
+                                        mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                                        schema = @Schema(implementation = ProblemDetail.class)))
+            })
+    ResponseEntity<?> updateById(@PathVariable String id, @RequestBody UpdateCategoryApiInput input);
 }
