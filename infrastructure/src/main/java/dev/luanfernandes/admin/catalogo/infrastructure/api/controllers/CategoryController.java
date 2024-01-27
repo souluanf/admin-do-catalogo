@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.unprocessableEntity;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryCommand;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryOutput;
 import dev.luanfernandes.admin.catalogo.application.category.create.CreateCategoryUseCase;
+import dev.luanfernandes.admin.catalogo.application.category.delete.DeleteCategoryUseCase;
 import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
 import dev.luanfernandes.admin.catalogo.application.category.update.UpdateCategoryCommand;
 import dev.luanfernandes.admin.catalogo.application.category.update.UpdateCategoryOutput;
@@ -28,14 +29,17 @@ public class CategoryController implements CategoryAPI {
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
             final GetCategoryByIdUseCase getCategoryByIdUseCase,
-            final UpdateCategoryUseCase updateCategoryUseCase) {
+            final UpdateCategoryUseCase updateCategoryUseCase,
+            final DeleteCategoryUseCase deleteCategoryUseCase) {
         this.createCategoryUseCase = requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = requireNonNull(updateCategoryUseCase);
+        this.deleteCategoryUseCase = requireNonNull(deleteCategoryUseCase);
     }
 
     @Override
@@ -71,5 +75,10 @@ public class CategoryController implements CategoryAPI {
         final Function<UpdateCategoryOutput, ResponseEntity<?>> onSuccess = ResponseEntity::ok;
 
         return this.updateCategoryUseCase.execute(aCommand).fold(onError, onSuccess);
+    }
+
+    @Override
+    public void deleteById(final String anID) {
+        this.deleteCategoryUseCase.execute(anID);
     }
 }
