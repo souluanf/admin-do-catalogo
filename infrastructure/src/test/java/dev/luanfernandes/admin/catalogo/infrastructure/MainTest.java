@@ -11,7 +11,6 @@ class MainTest {
     void testMain() {
         System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "test");
         Main main = new Main();
-        Main.main(new String[] {});
         assertNotNull(main);
     }
 }

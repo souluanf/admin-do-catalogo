@@ -1,3 +1,5 @@
 package dev.luanfernandes.admin.catalogo.domain;
 
-public abstract class Identifier {}
+public abstract class Identifier extends ValueObject {
+    public abstract String getValue();
+}

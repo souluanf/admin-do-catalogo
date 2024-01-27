@@ -1,13 +1,12 @@
 package dev.luanfernandes.admin.catalogo.application.category.retrieve.get;
 
 import static dev.luanfernandes.admin.catalogo.domain.category.CategoryID.from;
-import static dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException.with;
 import static java.util.Objects.requireNonNull;
 
+import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryGateway;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
-import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
-import dev.luanfernandes.admin.catalogo.domain.validation.Error;
+import dev.luanfernandes.admin.catalogo.domain.exceptions.NotFoundException;
 import java.util.function.Supplier;
 
 public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
@@ -27,7 +26,7 @@ public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
                 .orElseThrow(notFound(aCategoryId));
     }
 
-    private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> with(new Error("Category with id %s not found".formatted(anId.getValue())));
+    private static Supplier<NotFoundException> notFound(CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

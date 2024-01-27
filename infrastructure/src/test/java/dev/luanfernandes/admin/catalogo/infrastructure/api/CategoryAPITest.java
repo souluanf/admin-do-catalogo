@@ -25,6 +25,7 @@ import dev.luanfernandes.admin.catalogo.application.category.retrieve.get.GetCat
 import dev.luanfernandes.admin.catalogo.domain.category.Category;
 import dev.luanfernandes.admin.catalogo.domain.category.CategoryID;
 import dev.luanfernandes.admin.catalogo.domain.exceptions.DomainException;
+import dev.luanfernandes.admin.catalogo.domain.exceptions.NotFoundException;
 import dev.luanfernandes.admin.catalogo.domain.validation.Error;
 import dev.luanfernandes.admin.catalogo.domain.validation.handler.Notification;
 import dev.luanfernandes.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
@@ -184,12 +185,11 @@ class CategoryAPITest {
     @Test
     void givenAnInvalidId_whenCallsGetCategory_thenShouldReturnNotFound() throws Exception {
         final var expectedErrorMessage = "Category with id 123 not found";
-        final var expectedId = CategoryID.from("123").getValue();
+        final var expectedId = CategoryID.from("123");
 
-        when(getCategoryByIdUseCase.execute(any()))
-                .thenThrow(DomainException.with(new Error("Category with id %S was not found".formatted(expectedId))));
+        when(getCategoryByIdUseCase.execute(any())).thenThrow(NotFoundException.with(Category.class, expectedId));
 
-        final var request = get("/categories/{id}", expectedId);
+        final var request = get("/categories/{id}", expectedId.getValue());
 
         final var response = this.mvc.perform(request).andDo(print());
 
